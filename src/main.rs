@@ -1,6 +1,8 @@
 use bevy::{prelude::*, render::camera::ScalingMode};
+use pipes::PipePlugin;
 use player::PlayerPlugin;
 
+mod pipes;
 mod player;
 
 fn main() {
@@ -19,11 +21,9 @@ fn main() {
                 })
                 .build(),
         )
-        .add_systems(
-            Startup,
-            setup
-        )
-        .add_plugins(PlayerPlugin)
+        .add_plugins((PlayerPlugin, PipePlugin))
+        .add_systems(Startup, setup)
+        .add_systems(Update, bevy::window::close_on_esc)
         .run();
 }
 
@@ -37,4 +37,3 @@ fn setup(mut commands: Commands) {
 
     commands.spawn(camera);
 }
-
