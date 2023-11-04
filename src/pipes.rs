@@ -45,7 +45,7 @@ fn spawn_pipes_system(mut commands: Commands, spawn_timer: Res<PipeSpawnTimer>) 
                 },
                 sprite: Sprite {
                     custom_size: Some(Vec2::new(20.0, 100.0)),
-                    color: Color::rgba(0.25, 1.0, 0.25, 1.0),
+                    color: Color::rgba(0.1, 0.75, 0.1, 1.0),
                     ..default()
                 },
                 ..default()
@@ -55,10 +55,17 @@ fn spawn_pipes_system(mut commands: Commands, spawn_timer: Res<PipeSpawnTimer>) 
     }
 }
 
-fn despawn_pipes_system(mut commands: Commands, mut pipes: Query<(&mut Transform, &Pipe)>) {}
+fn despawn_pipes_system(mut commands: Commands, pipes: Query<(Entity, &Transform), With<Pipe>>) {
+    for (entity, transform) in &pipes {
+        if transform.translation.x < -200.0 {
+            commands.entity(entity).despawn();
+        }
+    }
+}
 
-fn move_pipes_system(mut pipes: Query<(&mut Transform, &Pipe)>, time: Res<Time>) {
-    for (mut transform, _) in &mut pipes {
+fn move_pipes_system(mut pipes: Query<&mut Transform, With<Pipe>>, time: Res<Time>) {
+    for mut transform in &mut pipes {
+        // TODO: Nasty nasty magic number, change this!!!!!
         transform.translation.x = transform.translation.x - (50.0 * time.delta_seconds());
     }
 }
