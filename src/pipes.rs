@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use rand::prelude::*;
 
 #[derive(Resource)]
 struct PipeSpawnTimer(Timer);
@@ -18,7 +19,27 @@ impl Default for PipeSpawnTimer {
 pub struct PipePlugin;
 
 #[derive(Component)]
-struct Pipe {}
+struct Pipe {
+    y_pos: f32,
+}
+
+#[derive(Component)]
+struct PipePair {
+    top: Pipe,
+    bot: Pipe,
+}
+
+impl PipePair {
+    pub fn new() -> Self {
+        let top_pos = rand::random::<f32>();
+        Self {
+            top: Pipe { y_pos: top_pos },
+            bot: Pipe {
+                y_pos: top_pos - 50.0,
+            },
+        }
+    }
+}
 
 impl Plugin for PipePlugin {
     fn build(&self, app: &mut App) {
