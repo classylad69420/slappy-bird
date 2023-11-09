@@ -19,6 +19,10 @@ impl Plugin for PlayerPlugin {
 fn spawn_player(mut commands: Commands) {
     commands.spawn((
         SpriteBundle {
+            transform: Transform {
+                translation: Vec3::new(-75.0, 0.0, 0.0),
+                ..default()
+            },
             sprite: Sprite {
                 custom_size: Some(Vec2::new(20.0, 20.0)),
                 color: Color::rgba(1.0, 1.0, 0.0, 1.0),

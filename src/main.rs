@@ -13,7 +13,7 @@ fn main() {
                 .set(WindowPlugin {
                     primary_window: Some(Window {
                         title: "Slappy bird".into(),
-                        resolution: (853.3, 480.0).into(),
+                        resolution: (1200.0, 900.0).into(),
                         resizable: false,
                         ..default()
                     }),

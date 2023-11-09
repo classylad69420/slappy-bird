@@ -1,5 +1,6 @@
 use bevy::prelude::*;
-use rand::prelude::*;
+
+const PIPE_HEIGHT: f32 = 200.0;
 
 #[derive(Resource)]
 struct PipeSpawnTimer(Timer);
@@ -19,27 +20,25 @@ impl Default for PipeSpawnTimer {
 pub struct PipePlugin;
 
 #[derive(Component)]
-struct Pipe {
-    y_pos: f32,
-}
+struct Pipe {}
 
-#[derive(Component)]
-struct PipePair {
-    top: Pipe,
-    bot: Pipe,
-}
-
-impl PipePair {
-    pub fn new() -> Self {
-        let top_pos = rand::random::<f32>();
-        Self {
-            top: Pipe { y_pos: top_pos },
-            bot: Pipe {
-                y_pos: top_pos - 50.0,
-            },
-        }
-    }
-}
+// #[derive(Component)]
+// struct PipePair {
+//     top: Pipe,
+//     bot: Pipe,
+// }
+//
+// impl PipePair {
+//     pub fn new() -> Self {
+//         let top_pos = rand::random::<f32>();
+//         Self {
+//             top: Pipe { y_pos: top_pos },
+//             bot: Pipe {
+//                 y_pos: top_pos - 50.0,
+//             },
+//         }
+//     }
+// }
 
 impl Plugin for PipePlugin {
     fn build(&self, app: &mut App) {
@@ -58,15 +57,32 @@ impl Plugin for PipePlugin {
 
 fn spawn_pipes_system(mut commands: Commands, spawn_timer: Res<PipeSpawnTimer>) {
     if spawn_timer.0.just_finished() {
+        let mut y_pos = rand::random::<f32>() * (PIPE_HEIGHT - 50.0);
+        y_pos = y_pos + 25.0;
         commands.spawn((
             SpriteBundle {
                 transform: Transform {
-                    translation: Vec3::new(200.0, 0.0, 0.0),
+                    translation: Vec3::new(200.0, y_pos, 0.0),
                     ..default()
                 },
                 sprite: Sprite {
-                    custom_size: Some(Vec2::new(20.0, 100.0)),
+                    custom_size: Some(Vec2::new(20.0, PIPE_HEIGHT)),
                     color: Color::rgba(0.1, 0.75, 0.1, 1.0),
+                    ..default()
+                },
+                ..default()
+            },
+            Pipe {},
+        ));
+        commands.spawn((
+            SpriteBundle {
+                transform: Transform {
+                    translation: Vec3::new(200.0, y_pos - (PIPE_HEIGHT + 50.0), 0.0),
+                    ..default()
+                },
+                sprite: Sprite {
+                    custom_size: Some(Vec2::new(20.0, PIPE_HEIGHT)),
+                    color: Color::rgba(1.0, 0.5, 0.5, 1.0),
                     ..default()
                 },
                 ..default()
