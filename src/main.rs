@@ -1,7 +1,9 @@
 use bevy::{prelude::*, render::camera::ScalingMode};
+use collision::CollisionPlugin;
 use pipes::PipePlugin;
 use player::PlayerPlugin;
 
+mod collision;
 mod pipes;
 mod player;
 
@@ -21,7 +23,7 @@ fn main() {
                 })
                 .build(),
         )
-        .add_plugins((PlayerPlugin, PipePlugin))
+        .add_plugins((PlayerPlugin, PipePlugin, CollisionPlugin))
         .add_systems(Startup, setup)
         .add_systems(Update, bevy::window::close_on_esc)
         .run();

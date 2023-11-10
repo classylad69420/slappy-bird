@@ -1,14 +1,15 @@
 use bevy::prelude::*;
 
-pub struct PlayerPlugin;
+const JUMP_SPEED: f32 = 175.0;
 
 #[derive(Component)]
-struct Player {
+pub struct Player {
     fall_speed: f32,
 }
 
 const GRAVITY: f32 = 9.8;
 
+pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, spawn_player)
@@ -21,10 +22,10 @@ fn spawn_player(mut commands: Commands) {
         SpriteBundle {
             transform: Transform {
                 translation: Vec3::new(-75.0, 0.0, 0.0),
+                scale: Vec3::new(15.0, 15.0, 1.0),
                 ..default()
             },
             sprite: Sprite {
-                custom_size: Some(Vec2::new(20.0, 20.0)),
                 color: Color::rgba(1.0, 1.0, 0.0, 1.0),
                 ..default()
             },
@@ -43,7 +44,7 @@ fn player_movement_system(
     for (mut transform, mut player) in &mut characters {
         if input.just_pressed(KeyCode::Space) {
             // TODO: bad evil constant
-            player.fall_speed = 200.0 - (player.fall_speed * 0.15);
+            player.fall_speed = JUMP_SPEED - (player.fall_speed * 0.15);
         }
 
         if input.pressed(KeyCode::Tab) {
