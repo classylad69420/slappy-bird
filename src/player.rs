@@ -22,18 +22,16 @@ impl Plugin for PlayerPlugin {
     }
 }
 
-fn spawn_player(mut commands: Commands) {
+fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn((
         SpriteBundle {
             transform: Transform {
                 translation: Vec3::new(-75.0, 0.0, 0.0),
-                scale: Vec3::new(15.0, 15.0, 1.0),
+                scale: Vec3::new(1.0, 1.0, 1.0),
                 ..default()
             },
-            sprite: Sprite {
-                color: Color::rgba(1.0, 1.0, 0.0, 1.0),
-                ..default()
-            },
+            sprite: Sprite { ..default() },
+            texture: asset_server.load("sprites/yellowbird-downflap.png"),
             ..default()
         },
         Player { fall_speed: 0.0 },

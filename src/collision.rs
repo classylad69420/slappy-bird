@@ -16,6 +16,7 @@ impl Plugin for CollisionPlugin {
 fn check_for_collisions_system(
     mut player_query: Query<&Transform, With<Player>>,
     pipes_query: Query<&Transform, With<Pipe>>,
+    mut next_state: ResMut<NextState<AppState>>,
 ) {
     let player_transform_result = player_query.get_single_mut();
     match player_transform_result {
@@ -28,8 +29,7 @@ fn check_for_collisions_system(
                     transform.scale.truncate(),
                 );
                 if collision.is_some() {
-                    // TODO: Game over state
-                    println!("You died bitch");
+                    next_state.set(AppState::GameOver);
                 }
             }
         }

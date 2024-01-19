@@ -72,8 +72,8 @@ fn setup_menu(mut commands: Commands) {
             parent
                 .spawn(ButtonBundle {
                     style: Style {
-                        width: Val::Px(150.),
-                        height: Val::Px(65.),
+                        width: Val::Px(150.0),
+                        height: Val::Px(65.0),
                         // horizontally center child text
                         justify_content: JustifyContent::Center,
                         // vertically center child text
