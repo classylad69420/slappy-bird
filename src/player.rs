@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::states::AppState;
+
 const JUMP_SPEED: f32 = 175.0;
 
 #[derive(Component)]
@@ -12,8 +14,11 @@ const GRAVITY: f32 = 9.8;
 pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_player)
-            .add_systems(Update, player_movement_system);
+        app.add_systems(OnEnter(AppState::InGame), spawn_player)
+            .add_systems(
+                Update,
+                player_movement_system.run_if(in_state(AppState::InGame)),
+            );
     }
 }
 

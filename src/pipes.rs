@@ -1,7 +1,10 @@
 use bevy::prelude::*;
 
+use crate::states::AppState;
+
 const PIPE_HEIGHT: f32 = 200.0;
 const PIPE_OFFSET: f32 = 100.0;
+const PIPE_GAP: f32 = 75.0;
 
 #[derive(Resource)]
 struct PipeSpawnTimer(Timer);
@@ -31,7 +34,8 @@ impl Plugin for PipePlugin {
                 spawn_pipes_system,
                 despawn_pipes_system,
                 move_pipes_system,
-            ),
+            )
+                .run_if(in_state(AppState::InGame)),
         )
         .init_resource::<PipeSpawnTimer>();
     }
@@ -59,7 +63,7 @@ fn spawn_pipes_system(mut commands: Commands, spawn_timer: Res<PipeSpawnTimer>) 
         commands.spawn((
             SpriteBundle {
                 transform: Transform {
-                    translation: Vec3::new(200.0, y_pos - (PIPE_HEIGHT + 50.0), 0.0),
+                    translation: Vec3::new(200.0, y_pos - (PIPE_HEIGHT + PIPE_GAP), 0.0),
                     scale: Vec3::new(20.0, PIPE_HEIGHT, 1.0),
                     ..default()
                 },
