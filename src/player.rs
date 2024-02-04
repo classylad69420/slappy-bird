@@ -17,12 +17,26 @@ impl Plugin for PlayerPlugin {
         app.add_systems(OnEnter(AppState::InGame), spawn_player)
             .add_systems(
                 Update,
-                player_movement_system.run_if(in_state(AppState::InGame)),
+                (
+                    player_movement_system.run_if(in_state(AppState::InGame)),
+                    restart_game_system.run_if(in_state(AppState::GameOver)),
+                ),
             );
     }
 }
 
-fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn spawn_player(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut player_query: Query<Entity, With<Player>>,
+) {
+    let player_entity_result = player_query.get_single_mut();
+    match player_entity_result {
+        Ok(player_entity) => {
+            commands.entity(player_entity).despawn();
+        }
+        _ => {}
+    }
     commands.spawn((
         SpriteBundle {
             transform: Transform {
@@ -40,11 +54,11 @@ fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
 }
 
 fn player_movement_system(
-    mut characters: Query<(&mut Transform, &mut Player)>,
+    mut player_query: Query<(&mut Transform, &mut Player)>,
     input: Res<Input<KeyCode>>,
     time: Res<Time>,
 ) {
-    for (mut transform, mut player) in &mut characters {
+    for (mut transform, mut player) in &mut player_query {
         if input.just_pressed(KeyCode::Space) {
             // TODO: bad evil constant
             player.fall_speed = JUMP_SPEED - (player.fall_speed * 0.15);
@@ -58,5 +72,11 @@ fn player_movement_system(
         let movement_amount = player.fall_speed * time.delta_seconds();
         player.fall_speed = player.fall_speed - GRAVITY;
         transform.translation.y += movement_amount;
+    }
+}
+
+fn restart_game_system(input: Res<Input<KeyCode>>, mut next_state: ResMut<NextState<AppState>>) {
+    if input.just_pressed(KeyCode::Tab) {
+        next_state.set(AppState::InGame);
     }
 }

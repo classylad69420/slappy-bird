@@ -37,6 +37,7 @@ impl Plugin for PipePlugin {
             )
                 .run_if(in_state(AppState::InGame)),
         )
+        .add_systems(OnEnter(AppState::InGame), clear_pipes_system)
         .init_resource::<PipeSpawnTimer>();
     }
 }
@@ -83,6 +84,12 @@ fn despawn_pipes_system(mut commands: Commands, pipes: Query<(Entity, &Transform
         if transform.translation.x < -200.0 {
             commands.entity(entity).despawn();
         }
+    }
+}
+
+fn clear_pipes_system(mut commands: Commands, pipes: Query<Entity, With<Pipe>>) {
+    for entity in &pipes {
+        commands.entity(entity).despawn();
     }
 }
 

@@ -1,4 +1,4 @@
-use bevy::{prelude::*, render::camera::ScalingMode};
+use bevy::prelude::*;
 use collision::CollisionPlugin;
 use pipes::PipePlugin;
 use player::PlayerPlugin;
@@ -17,7 +17,7 @@ fn main() {
                 .set(WindowPlugin {
                     primary_window: Some(Window {
                         title: "Slappy bird".into(),
-                        resolution: (1200.0, 900.0).into(),
+                        resolution: (768.0, 1024.0).into(),
                         resizable: false,
                         ..default()
                     }),
@@ -36,14 +36,7 @@ fn main() {
 }
 
 fn setup(mut commands: Commands) {
-    let mut camera = Camera2dBundle::default();
-
-    camera.projection.scaling_mode = ScalingMode::AutoMin {
-        min_width: 256.0,
-        min_height: 144.0,
-    };
-
-    commands.spawn(camera);
+    commands.spawn(Camera2dBundle::default());
 }
 
 #[derive(Resource)]

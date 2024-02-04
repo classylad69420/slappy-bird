@@ -8,8 +8,10 @@ impl Plugin for CollisionPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
-            (check_for_collisions_system.run_if(in_state(AppState::InGame)),
-            check_for_ground_system.run_if(in_state(AppState::InGame)))
+            (
+                check_for_collisions_system.run_if(in_state(AppState::InGame)),
+                check_for_ground_system.run_if(in_state(AppState::InGame)),
+            ),
         );
     }
 }
@@ -41,14 +43,14 @@ fn check_for_collisions_system(
 fn check_for_ground_system(
     mut player_query: Query<&Transform, With<Player>>,
     window_query: Query<&Window>,
-    mut next_state: ResMut<NextState<AppState>>
+    mut next_state: ResMut<NextState<AppState>>,
 ) {
     let player_transform_result = player_query.get_single_mut();
     let window = window_query.single();
     match player_transform_result {
         Ok(player_transform) => {
             println!("{}", player_transform.translation.y);
-            if player_transform.translation.y <= -window.height()/2.0 {
+            if player_transform.translation.y <= -window.height() / 2.0 {
                 next_state.set(AppState::GameOver);
             }
         }
