@@ -69,9 +69,8 @@ fn player_movement_system(
             player.fall_speed = 0.0;
         }
 
-        let movement_amount = player.fall_speed * time.delta_seconds();
         player.fall_speed = player.fall_speed - GRAVITY;
-        transform.translation.y += movement_amount;
+        transform.translation.y += player.fall_speed * time.delta_seconds();
     }
 }
 

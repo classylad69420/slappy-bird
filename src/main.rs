@@ -1,3 +1,4 @@
+use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 use bevy::prelude::*;
 use collision::CollisionPlugin;
 use pipes::PipePlugin;
@@ -25,6 +26,10 @@ fn main() {
                 })
                 .build(),
         )
+        .add_plugins((
+            FrameTimeDiagnosticsPlugin::default(),
+            LogDiagnosticsPlugin::default(),
+        ))
         .add_plugins((PlayerPlugin, PipePlugin, CollisionPlugin))
         .add_state::<AppState>()
         .add_systems(Startup, setup)

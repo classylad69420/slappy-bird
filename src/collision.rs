@@ -49,7 +49,6 @@ fn check_for_ground_system(
     let window = window_query.single();
     match player_transform_result {
         Ok(player_transform) => {
-            println!("{}", player_transform.translation.y);
             if player_transform.translation.y <= -window.height() / 2.0 {
                 next_state.set(AppState::GameOver);
             }
