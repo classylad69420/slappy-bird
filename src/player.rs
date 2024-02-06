@@ -58,6 +58,7 @@ fn player_movement_system(
     input: Res<Input<KeyCode>>,
     time: Res<Time>,
 ) {
+    let timestep = time.delta_seconds();
     for (mut transform, mut player) in &mut player_query {
         if input.just_pressed(KeyCode::Space) {
             // TODO: bad evil constant
@@ -69,8 +70,10 @@ fn player_movement_system(
             player.fall_speed = 0.0;
         }
 
-        player.fall_speed = player.fall_speed - GRAVITY;
-        transform.translation.y += player.fall_speed * time.delta_seconds();
+        // Framerate-independent constant acceleration calculation
+        // https://stackoverflow.com/questions/43960217/framerate-independent-acceleration-decceleration (accessed 2/6/24)
+        transform.translation.y += player.fall_speed * timestep + .05 * GRAVITY * timestep * timestep;
+        player.fall_speed += GRAVITY * timestep;
     }
 }
 
