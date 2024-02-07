@@ -2,14 +2,14 @@ use bevy::prelude::*;
 
 use crate::states::AppState;
 
-const JUMP_SPEED: f32 = 175.0;
+const JUMP_SPEED: f32 = 160.0;
 
 #[derive(Component)]
 pub struct Player {
     fall_speed: f32,
 }
 
-const GRAVITY: f32 = 9.8;
+const GRAVITY: f32 = -490.0;
 
 pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
@@ -72,7 +72,7 @@ fn player_movement_system(
 
         // Framerate-independent constant acceleration calculation
         // https://stackoverflow.com/questions/43960217/framerate-independent-acceleration-decceleration (accessed 2/6/24)
-        transform.translation.y += player.fall_speed * timestep + .05 * GRAVITY * timestep * timestep;
+        transform.translation.y += player.fall_speed * timestep + 0.5 * GRAVITY * timestep * timestep;
         player.fall_speed += GRAVITY * timestep;
     }
 }
