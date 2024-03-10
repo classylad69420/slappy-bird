@@ -1,10 +1,10 @@
 use bevy::prelude::*;
 
-use crate::states::AppState;
+use crate::{collision::Hitbox, states::AppState};
 
 const PIPE_HEIGHT: f32 = 200.0;
 const PIPE_OFFSET: f32 = 100.0;
-const PIPE_GAP: f32 = 75.0;
+const PIPE_GAP: f32 = 200.0;
 
 #[derive(Resource)]
 struct PipeSpawnTimer(Timer);
@@ -24,6 +24,9 @@ impl Default for PipeSpawnTimer {
 #[derive(Component)]
 pub struct Pipe;
 
+#[derive(Component)]
+pub struct ScoringZone;
+
 pub struct PipePlugin;
 impl Plugin for PipePlugin {
     fn build(&self, app: &mut App) {
@@ -42,7 +45,11 @@ impl Plugin for PipePlugin {
     }
 }
 
-fn spawn_pipes_system(mut commands: Commands, spawn_timer: Res<PipeSpawnTimer>) {
+fn spawn_pipes_system(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    spawn_timer: Res<PipeSpawnTimer>,
+) {
     if spawn_timer.0.just_finished() {
         let mut y_pos = rand::random::<f32>() * (PIPE_HEIGHT - PIPE_OFFSET);
         y_pos = y_pos + PIPE_OFFSET;
@@ -50,31 +57,34 @@ fn spawn_pipes_system(mut commands: Commands, spawn_timer: Res<PipeSpawnTimer>) 
             SpriteBundle {
                 transform: Transform {
                     translation: Vec3::new(200.0, y_pos, 0.0),
-                    scale: Vec3::new(20.0, PIPE_HEIGHT, 1.0),
                     ..default()
                 },
                 sprite: Sprite {
-                    color: Color::rgba(0.1, 0.75, 0.1, 1.0),
+                    flip_y: true,
                     ..default()
                 },
+                texture: asset_server.load("sprites/pipe-green.png"),
                 ..default()
             },
             Pipe {},
+            Hitbox {
+                scale: Vec2::new(52.0, 320.0),
+            },
         ));
         commands.spawn((
             SpriteBundle {
                 transform: Transform {
                     translation: Vec3::new(200.0, y_pos - (PIPE_HEIGHT + PIPE_GAP), 0.0),
-                    scale: Vec3::new(20.0, PIPE_HEIGHT, 1.0),
                     ..default()
                 },
-                sprite: Sprite {
-                    color: Color::rgba(0.1, 0.75, 0.1, 1.0),
-                    ..default()
-                },
+                sprite: Sprite { ..default() },
+                texture: asset_server.load("sprites/pipe-green.png"),
                 ..default()
             },
             Pipe {},
+            Hitbox {
+                scale: Vec2::new(52.0, 320.0),
+            },
         ));
     }
 }

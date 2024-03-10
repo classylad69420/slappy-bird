@@ -3,6 +3,11 @@ use crate::player::Player;
 use crate::states::AppState;
 use bevy::{prelude::*, sprite::collide_aabb::collide};
 
+#[derive(Component)]
+pub struct Hitbox {
+    pub scale: Vec2,
+}
+
 pub struct CollisionPlugin;
 impl Plugin for CollisionPlugin {
     fn build(&self, app: &mut App) {
@@ -17,19 +22,19 @@ impl Plugin for CollisionPlugin {
 }
 
 fn check_for_collisions_system(
-    mut player_query: Query<&Transform, With<Player>>,
-    pipes_query: Query<&Transform, With<Pipe>>,
+    mut player_query: Query<(&Transform, &Hitbox), With<Player>>,
+    pipes_query: Query<(&Transform, &Hitbox), With<Pipe>>,
     mut next_state: ResMut<NextState<AppState>>,
 ) {
     let player_transform_result = player_query.get_single_mut();
     match player_transform_result {
-        Ok(player_transform) => {
-            for transform in &pipes_query {
+        Ok((player_transform, player_hitbox)) => {
+            for (pipe_transform, pipe_hitbox) in &pipes_query {
                 let collision = collide(
                     player_transform.translation,
-                    player_transform.scale.truncate(),
-                    transform.translation,
-                    transform.scale.truncate(),
+                    player_hitbox.scale,
+                    pipe_transform.translation,
+                    pipe_hitbox.scale,
                 );
                 if collision.is_some() {
                     next_state.set(AppState::GameOver);

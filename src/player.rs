@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::states::AppState;
+use crate::{collision::Hitbox, states::AppState};
 
 const JUMP_SPEED: f32 = 160.0;
 
@@ -41,7 +41,6 @@ fn spawn_player(
         SpriteBundle {
             transform: Transform {
                 translation: Vec3::new(-75.0, 0.0, 0.0),
-                scale: Vec3::new(1.0, 1.0, 1.0),
                 ..default()
             },
             sprite: Sprite { ..default() },
@@ -50,6 +49,9 @@ fn spawn_player(
         },
         Player { fall_speed: 0.0 },
         Name::new("Player"),
+        Hitbox {
+            scale: Vec2::new(34.0, 24.0),
+        },
     ));
 }
 
@@ -71,8 +73,9 @@ fn player_movement_system(
         }
 
         // Framerate-independent constant acceleration calculation
-        // https://stackoverflow.com/questions/43960217/framerate-independent-acceleration-decceleration (accessed 2/6/24)
-        transform.translation.y += player.fall_speed * timestep + 0.5 * GRAVITY * timestep * timestep;
+        // https://stackoverflow.com/questions/43960217/framerate-independent-acceleration-decceleration (accessed 2/6/2024)
+        transform.translation.y +=
+            player.fall_speed * timestep + 0.5 * GRAVITY * timestep * timestep;
         player.fall_speed += GRAVITY * timestep;
     }
 }
