@@ -31,11 +31,8 @@ fn spawn_player(
     mut player_query: Query<Entity, With<Player>>,
 ) {
     let player_entity_result = player_query.get_single_mut();
-    match player_entity_result {
-        Ok(player_entity) => {
-            commands.entity(player_entity).despawn();
-        }
-        _ => {}
+    if let Ok(player_entity) = player_entity_result {
+        commands.entity(player_entity).despawn();
     }
     commands.spawn((
         SpriteBundle {

@@ -1,4 +1,3 @@
-use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 use bevy::prelude::*;
 use collision::CollisionPlugin;
 use pipes::PipePlugin;
@@ -26,10 +25,6 @@ fn main() {
                 })
                 .build(),
         )
-        .add_plugins((
-            FrameTimeDiagnosticsPlugin::default(),
-            LogDiagnosticsPlugin::default(),
-        ))
         .add_plugins((PlayerPlugin, PipePlugin, CollisionPlugin))
         .add_state::<AppState>()
         .add_systems(Startup, setup)
@@ -70,8 +65,6 @@ fn setup_menu(mut commands: Commands) {
             parent
                 .spawn(ButtonBundle {
                     style: Style {
-                        width: Val::Px(150.0),
-                        height: Val::Px(65.0),
                         // horizontally center child text
                         justify_content: JustifyContent::Center,
                         // vertically center child text

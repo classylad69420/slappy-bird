@@ -52,7 +52,7 @@ fn spawn_pipes_system(
 ) {
     if spawn_timer.0.just_finished() {
         let mut y_pos = rand::random::<f32>() * (PIPE_HEIGHT - PIPE_OFFSET);
-        y_pos = y_pos + PIPE_OFFSET;
+        y_pos += PIPE_OFFSET;
         commands.spawn((
             SpriteBundle {
                 transform: Transform {
@@ -106,7 +106,7 @@ fn clear_pipes_system(mut commands: Commands, pipes: Query<Entity, With<Pipe>>) 
 fn move_pipes_system(mut pipes: Query<&mut Transform, With<Pipe>>, time: Res<Time>) {
     for mut transform in &mut pipes {
         // TODO: Nasty nasty magic number, change this!!!!!
-        transform.translation.x = transform.translation.x - (50.0 * time.delta_seconds());
+        transform.translation.x -= 50.0 * time.delta_seconds();
     }
 }
 

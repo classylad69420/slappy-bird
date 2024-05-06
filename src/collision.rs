@@ -27,21 +27,18 @@ fn check_for_collisions_system(
     mut next_state: ResMut<NextState<AppState>>,
 ) {
     let player_transform_result = player_query.get_single_mut();
-    match player_transform_result {
-        Ok((player_transform, player_hitbox)) => {
-            for (pipe_transform, pipe_hitbox) in &pipes_query {
-                let collision = collide(
-                    player_transform.translation,
-                    player_hitbox.scale,
-                    pipe_transform.translation,
-                    pipe_hitbox.scale,
-                );
-                if collision.is_some() {
-                    next_state.set(AppState::GameOver);
-                }
+    if let Ok((player_transform, player_hitbox)) = player_transform_result {
+        for (pipe_transform, pipe_hitbox) in &pipes_query {
+            let collision = collide(
+                player_transform.translation,
+                player_hitbox.scale,
+                pipe_transform.translation,
+                pipe_hitbox.scale,
+            );
+            if collision.is_some() {
+                next_state.set(AppState::GameOver);
             }
         }
-        _ => {}
     }
 }
 
@@ -53,10 +50,8 @@ fn check_for_ground_system(
     let player_transform_result = player_query.get_single_mut();
     let window = window_query.single();
     match player_transform_result {
-        Ok(player_transform) => {
-            if player_transform.translation.y <= -window.height() / 2.0 {
-                next_state.set(AppState::GameOver);
-            }
+        Ok(player_transform) if player_transform.translation.y <= -window.height() / 2.0 => {
+            next_state.set(AppState::GameOver);
         }
         _ => {}
     }
